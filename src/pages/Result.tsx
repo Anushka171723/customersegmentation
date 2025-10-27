@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { performKMeansClustering, Customer, ClusterResult } from "@/utils/clustering";
 import { ArrowLeft, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -145,11 +145,7 @@ const Result = () => {
                   name={`Cluster ${clusterIdx + 1}`}
                   data={scatterData.filter(d => d.cluster === clusterIdx)}
                   fill={CLUSTER_COLORS[clusterIdx]}
-                >
-                  {scatterData.filter(d => d.cluster === clusterIdx).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={CLUSTER_COLORS[clusterIdx]} />
-                  ))}
-                </Scatter>
+                />
               ))}
             </ScatterChart>
           </ResponsiveContainer>
