@@ -33,26 +33,61 @@ const About = () => {
             </p>
           </Card>
 
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            {[
+              {
+                title: "Zero Setup",
+                description: "No installation, no servers, no configuration. Open your browser and start analyzing immediately.",
+              },
+              {
+                title: "100% Private",
+                description: "Your data never leaves your device. All processing happens locally in your browser.",
+              },
+              {
+                title: "Instant Results",
+                description: "See customer segments in seconds with real-time visualization and interactive charts.",
+              },
+            ].map((benefit, index) => (
+              <Card
+                key={index}
+                className="p-6 shadow-card border-border hover:shadow-glow transition-all duration-300"
+              >
+                <h3 className="text-lg font-semibold mb-2 text-primary">{benefit.title}</h3>
+                <p className="text-sm text-muted-foreground">{benefit.description}</p>
+              </Card>
+            ))}
+          </div>
+
           <Card className="p-8 shadow-card border-border">
-            <h2 className="text-2xl font-semibold mb-4">Technology Stack</h2>
-            <div className="grid md:grid-cols-2 gap-4">
+            <h2 className="text-2xl font-semibold mb-4">Perfect For</h2>
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold mb-2 text-primary">Frontend</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• React with TypeScript</li>
-                  <li>• Tailwind CSS for styling</li>
-                  <li>• Recharts for visualization</li>
-                  <li>• shadcn/ui components</li>
-                </ul>
+                <h3 className="font-semibold mb-3 text-primary">E-commerce Businesses</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Identify high-value customers, create personalized product recommendations, 
+                  and optimize your marketing spend by targeting the right segments.
+                </p>
               </div>
               <div>
-                <h3 className="font-semibold mb-2 text-primary">Algorithms</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• K-means clustering</li>
-                  <li>• Data normalization</li>
-                  <li>• Euclidean distance metrics</li>
-                  <li>• CSV parsing with PapaParse</li>
-                </ul>
+                <h3 className="font-semibold mb-3 text-primary">Marketing Teams</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Design targeted campaigns based on customer behavior patterns and spending 
+                  habits to maximize engagement and ROI.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-primary">Small Business Owners</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Understand your customer base without expensive analytics tools or hiring 
+                  data scientists. Make data-driven decisions confidently.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-primary">Data Analysts</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Quick exploratory analysis and prototyping without setting up infrastructure. 
+                  Export insights and share visualizations with stakeholders.
+                </p>
               </div>
             </div>
           </Card>
