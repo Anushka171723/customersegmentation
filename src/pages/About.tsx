@@ -1,35 +1,7 @@
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
-import { Github, Linkedin, Mail } from "lucide-react";
 
 const About = () => {
-  const teamMembers = [
-    {
-      name: "Alex Martinez",
-      role: "Machine Learning Engineer",
-      bio: "Expert in unsupervised learning and building real-time analytics solutions",
-      avatar: "AM",
-    },
-    {
-      name: "Priya Sharma",
-      role: "Product Designer",
-      bio: "Crafting intuitive experiences that make data science accessible to everyone",
-      avatar: "PS",
-    },
-    {
-      name: "Jordan Kim",
-      role: "Backend Architect",
-      bio: "Specializes in browser-based ML and privacy-first data processing",
-      avatar: "JK",
-    },
-    {
-      name: "Taylor Wong",
-      role: "Growth Strategist",
-      bio: "Passionate about empowering businesses through intelligent customer insights",
-      avatar: "TW",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Navigation />
@@ -60,35 +32,6 @@ const About = () => {
               into actionable strategies that drive real business growth.
             </p>
           </Card>
-
-          <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {teamMembers.map((member, index) => (
-              <Card 
-                key={index} 
-                className="p-6 shadow-card border-border hover:shadow-glow transition-all duration-300"
-              >
-                <div className="w-20 h-20 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground text-2xl font-bold mx-auto mb-4 shadow-glow">
-                  {member.avatar}
-                </div>
-                <h3 className="text-xl font-semibold text-center mb-1">{member.name}</h3>
-                <p className="text-primary text-sm text-center mb-3">{member.role}</p>
-                <p className="text-sm text-muted-foreground text-center mb-4">{member.bio}</p>
-                <div className="flex justify-center gap-3">
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Github className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                    <Mail className="w-5 h-5" />
-                  </a>
-                </div>
-              </Card>
-            ))}
-          </div>
 
           <Card className="p-8 shadow-card border-border">
             <h2 className="text-2xl font-semibold mb-4">Technology Stack</h2>
