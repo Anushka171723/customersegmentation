@@ -5,22 +5,28 @@ import { Github, Linkedin, Mail } from "lucide-react";
 const About = () => {
   const teamMembers = [
     {
-      name: "Dr. Sarah Chen",
-      role: "Lead Data Scientist",
-      bio: "PhD in Machine Learning with 10+ years of experience in customer analytics",
-      avatar: "SC",
+      name: "Alex Martinez",
+      role: "Machine Learning Engineer",
+      bio: "Expert in unsupervised learning and building real-time analytics solutions",
+      avatar: "AM",
     },
     {
-      name: "Michael Rodriguez",
-      role: "Full Stack Developer",
-      bio: "Specializes in building scalable data visualization platforms",
-      avatar: "MR",
+      name: "Priya Sharma",
+      role: "Product Designer",
+      bio: "Crafting intuitive experiences that make data science accessible to everyone",
+      avatar: "PS",
     },
     {
-      name: "Emily Johnson",
-      role: "UX Designer",
-      bio: "Passionate about making complex data accessible and beautiful",
-      avatar: "EJ",
+      name: "Jordan Kim",
+      role: "Backend Architect",
+      bio: "Specializes in browser-based ML and privacy-first data processing",
+      avatar: "JK",
+    },
+    {
+      name: "Taylor Wong",
+      role: "Growth Strategist",
+      bio: "Passionate about empowering businesses through intelligent customer insights",
+      avatar: "TW",
     },
   ];
 
@@ -37,21 +43,27 @@ const About = () => {
           <Card className="p-8 mb-8 shadow-card border-border">
             <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
             <p className="text-muted-foreground mb-4">
-              We believe that powerful data analytics tools should be accessible to everyone. 
-              Our customer segmentation platform brings enterprise-grade machine learning 
-              capabilities right to your browser, with no server required.
+              We're democratizing customer intelligence by making advanced machine learning 
+              accessible to businesses of all sizes. Our platform eliminates the complexity 
+              and costs traditionally associated with customer segmentation, putting enterprise-level 
+              insights directly in your hands.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              Privacy isn't just a feature—it's our foundation. All analysis happens entirely 
+              in your browser, meaning your customer data never touches our servers or leaves 
+              your device. You get instant, powerful insights while maintaining complete 
+              control over your sensitive business information.
             </p>
             <p className="text-muted-foreground">
-              By running all computations client-side, we ensure your data stays completely 
-              private while delivering instant results. Whether you're a small business owner 
-              or a data analyst, our tool helps you discover meaningful customer segments 
-              to drive targeted marketing strategies.
+              Whether you're launching targeted campaigns, optimizing product offerings, or 
+              understanding customer behavior patterns, we're here to transform your raw data 
+              into actionable strategies that drive real business growth.
             </p>
           </Card>
 
           <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>
           
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {teamMembers.map((member, index) => (
               <Card 
                 key={index} 
