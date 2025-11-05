@@ -83,7 +83,7 @@ const Upload = () => {
             Upload Customer Data
           </h1>
           <p className="text-muted-foreground mb-8">
-            Upload a CSV file or add customers manually to begin segmentation analysis
+            Upload a CSV file or add customers manually to analyze customer data
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
