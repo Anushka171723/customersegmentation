@@ -1,9 +1,12 @@
+export type ClusterType = "High Value" | "Medium Value" | "Low Value";
+
 export interface Customer {
   id: string;
   name: string;
   age: number;
   income: number;
   spendingScore: number;
+  cluster?: ClusterType;
 }
 
 export interface CustomerMetrics {
@@ -18,6 +21,17 @@ export interface CustomerMetrics {
   minSpendingScore: number;
   maxSpendingScore: number;
 }
+
+// Rule-based clustering logic
+export const assignCluster = (income: number, spendingScore: number): ClusterType => {
+  if (income > 70000 && spendingScore > 70) {
+    return "High Value";
+  } else if (income > 40000 && spendingScore > 40) {
+    return "Medium Value";
+  } else {
+    return "Low Value";
+  }
+};
 
 export const calculateMetrics = (customers: Customer[]): CustomerMetrics => {
   if (customers.length === 0) {

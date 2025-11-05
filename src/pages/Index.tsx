@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { BarChart3, Upload, Target, Users } from "lucide-react";
+import { BarChart3, UserPlus, Target, Users } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 
 const Index = () => {
@@ -16,37 +16,45 @@ const Index = () => {
             <BarChart3 className="w-12 h-12 text-primary-foreground" />
           </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
-            Customer Segmentation Platform
+            Customer Segmentation using Clustering
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Leverage machine learning clustering to automatically segment your customers 
-            and discover valuable insights for targeted marketing strategies.
+            Automatically group customers into High Value, Medium Value, and Low Value segments 
+            based on their income and spending behavior for targeted marketing strategies.
           </p>
-          <Link to="/upload">
-            <Button size="lg" className="shadow-glow text-lg px-8 py-6">
-              Get Started
-              <Upload className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
+          <div className="flex gap-4 justify-center">
+            <Link to="/add-customer">
+              <Button size="lg" className="shadow-glow text-lg px-8 py-6">
+                Add Customer
+                <UserPlus className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Link to="/result">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+                View Clusters
+                <BarChart3 className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Features */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {[
             {
-              icon: Upload,
-              title: "Easy Data Upload",
-              description: "Upload CSV files or add customer data manually with our intuitive interface",
+              icon: UserPlus,
+              title: "Easy Customer Input",
+              description: "Add customer data through a simple form or upload CSV files with bulk data",
             },
             {
               icon: Target,
-              title: "Smart Clustering",
-              description: "K-means algorithm runs in your browser for instant, privacy-focused analysis",
+              title: "Rule-Based Clustering",
+              description: "Automatic segmentation based on income and spending score thresholds",
             },
             {
               icon: Users,
               title: "Visual Insights",
-              description: "Interactive scatter plots and detailed tables to explore customer segments",
+              description: "Color-coded tables, pie charts, and summary statistics for each cluster",
             },
           ].map((feature, index) => (
             <Card
@@ -68,9 +76,9 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-6 text-center">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: "1", title: "Upload Data", desc: "Provide customer information via CSV or manual entry" },
-              { step: "2", title: "Analyze", desc: "Our algorithm processes data and identifies patterns" },
-              { step: "3", title: "Visualize", desc: "Explore segments through charts and detailed tables" },
+              { step: "1", title: "Add Customers", desc: "Enter customer details one by one or upload CSV data" },
+              { step: "2", title: "Auto-Cluster", desc: "System assigns customers to High, Medium, or Low Value clusters" },
+              { step: "3", title: "Visualize Results", desc: "View color-coded tables, charts, and cluster summaries" },
             ].map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xl flex items-center justify-center mx-auto mb-4 shadow-glow">

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { calculateMetrics, Customer, CustomerMetrics } from "@/utils/clustering";
-import { ArrowLeft, Download, ArrowUpDown } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { calculateMetrics, Customer, CustomerMetrics, ClusterType } from "@/utils/clustering";
+import { ArrowLeft, Download, ArrowUpDown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 type SortField = "name" | "age" | "income" | "spendingScore";
@@ -63,9 +63,9 @@ const Result = () => {
 
   const downloadResults = () => {
     const csv = [
-      "ID,Name,Age,Income,Spending Score",
+      "ID,Name,Age,Income,Spending Score,Cluster",
       ...customers.map(c => 
-        `${c.id},${c.name},${c.age},${c.income},${c.spendingScore}`
+        `${c.id},${c.name},${c.age},${c.income},${c.spendingScore},${c.cluster}`
       )
     ].join("\n");
 
@@ -73,10 +73,46 @@ const Result = () => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "customer_data.csv";
+    a.download = "customer_clusters.csv";
     a.click();
     window.URL.revokeObjectURL(url);
     toast.success("Data downloaded");
+  };
+
+  const handleDelete = (id: string) => {
+    const updatedCustomers = customers.filter(c => c.id !== id);
+    localStorage.setItem("customers", JSON.stringify(updatedCustomers));
+    setCustomers(updatedCustomers);
+    setMetrics(calculateMetrics(updatedCustomers));
+    toast.success("Customer deleted");
+  };
+
+  const handleResetData = () => {
+    if (confirm("Are you sure you want to delete all customer data?")) {
+      localStorage.removeItem("customers");
+      setCustomers([]);
+      toast.success("All data cleared");
+      navigate("/add-customer");
+    }
+  };
+
+  const getClusterColor = (cluster?: ClusterType) => {
+    switch (cluster) {
+      case "High Value": return "text-green-600 dark:text-green-400";
+      case "Medium Value": return "text-orange-600 dark:text-orange-400";
+      case "Low Value": return "text-red-600 dark:text-red-400";
+      default: return "text-muted-foreground";
+    }
+  };
+
+  const getClusterBadge = (cluster?: ClusterType) => {
+    const baseClasses = "px-3 py-1 rounded-full text-xs font-semibold";
+    switch (cluster) {
+      case "High Value": return `${baseClasses} bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400`;
+      case "Medium Value": return `${baseClasses} bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400`;
+      case "Low Value": return `${baseClasses} bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400`;
+      default: return `${baseClasses} bg-secondary text-secondary-foreground`;
+    }
   };
 
   if (loading || !metrics) {
@@ -86,38 +122,24 @@ const Result = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Analyzing customer data...</p>
+            <p className="mt-4 text-muted-foreground">Loading customer data...</p>
           </div>
         </div>
       </div>
     );
   }
 
-  // Prepare data for age distribution chart
-  const ageGroups = [
-    { range: "18-25", count: customers.filter(c => c.age >= 18 && c.age <= 25).length },
-    { range: "26-35", count: customers.filter(c => c.age >= 26 && c.age <= 35).length },
-    { range: "36-45", count: customers.filter(c => c.age >= 36 && c.age <= 45).length },
-    { range: "46-55", count: customers.filter(c => c.age >= 46 && c.age <= 55).length },
-    { range: "56+", count: customers.filter(c => c.age >= 56).length },
-  ];
+  // Calculate cluster distribution
+  const clusterCounts = {
+    "High Value": customers.filter(c => c.cluster === "High Value").length,
+    "Medium Value": customers.filter(c => c.cluster === "Medium Value").length,
+    "Low Value": customers.filter(c => c.cluster === "Low Value").length,
+  };
 
-  // Prepare data for income distribution chart
-  const incomeGroups = [
-    { range: "$0-30k", count: customers.filter(c => c.income < 30000).length },
-    { range: "$30-50k", count: customers.filter(c => c.income >= 30000 && c.income < 50000).length },
-    { range: "$50-70k", count: customers.filter(c => c.income >= 50000 && c.income < 70000).length },
-    { range: "$70-100k", count: customers.filter(c => c.income >= 70000 && c.income < 100000).length },
-    { range: "$100k+", count: customers.filter(c => c.income >= 100000).length },
-  ];
-
-  // Prepare data for spending score distribution
-  const scoreGroups = [
-    { range: "1-20", count: customers.filter(c => c.spendingScore >= 1 && c.spendingScore <= 20).length },
-    { range: "21-40", count: customers.filter(c => c.spendingScore >= 21 && c.spendingScore <= 40).length },
-    { range: "41-60", count: customers.filter(c => c.spendingScore >= 41 && c.spendingScore <= 60).length },
-    { range: "61-80", count: customers.filter(c => c.spendingScore >= 61 && c.spendingScore <= 80).length },
-    { range: "81-100", count: customers.filter(c => c.spendingScore >= 81 && c.spendingScore <= 100).length },
+  const pieData = [
+    { name: "High Value", value: clusterCounts["High Value"], color: "#22c55e" },
+    { name: "Medium Value", value: clusterCounts["Medium Value"], color: "#f97316" },
+    { name: "Low Value", value: clusterCounts["Low Value"], color: "#ef4444" },
   ];
 
   return (
@@ -128,94 +150,88 @@ const Result = () => {
         <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
-              Customer Data Analysis
+              Customer Clusters
             </h1>
             <p className="text-muted-foreground">
               Insights from {metrics.totalCustomers} customer records
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => navigate("/upload")} variant="outline">
+            <Button onClick={() => navigate("/add-customer")} variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              Add More
             </Button>
-            <Button onClick={downloadResults} className="shadow-glow">
+            <Button onClick={downloadResults} variant="outline">
               <Download className="w-4 h-4 mr-2" />
-              Download CSV
+              Download
+            </Button>
+            <Button onClick={handleResetData} variant="destructive">
+              <Trash2 className="w-4 h-4 mr-2" />
+              Reset Data
             </Button>
           </div>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid md:grid-cols-3 gap-6 mb-6">
+        {/* Summary Section */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           <Card className="p-6 shadow-card border-border animate-fade-in">
-            <h3 className="text-lg font-semibold mb-4 text-primary">Age Statistics</h3>
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">Average:</span> <span className="font-semibold">{metrics.avgAge.toFixed(1)} years</span></p>
-              <p><span className="text-muted-foreground">Range:</span> <span className="font-semibold">{metrics.minAge} - {metrics.maxAge} years</span></p>
+            <h2 className="text-2xl font-semibold mb-4">Summary</h2>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Total Customers:</span>
+                <span className="font-bold text-2xl">{metrics.totalCustomers}</span>
+              </div>
+              <div className="h-px bg-border"></div>
+              <div className="flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                  High Value:
+                </span>
+                <span className="font-bold text-xl text-green-600 dark:text-green-400">{clusterCounts["High Value"]}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-orange-500"></span>
+                  Medium Value:
+                </span>
+                <span className="font-bold text-xl text-orange-600 dark:text-orange-400">{clusterCounts["Medium Value"]}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                  Low Value:
+                </span>
+                <span className="font-bold text-xl text-red-600 dark:text-red-400">{clusterCounts["Low Value"]}</span>
+              </div>
             </div>
           </Card>
 
-          <Card className="p-6 shadow-card border-border animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <h3 className="text-lg font-semibold mb-4 text-primary">Income Statistics</h3>
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">Average:</span> <span className="font-semibold">${metrics.avgIncome.toFixed(0).toLocaleString()}</span></p>
-              <p><span className="text-muted-foreground">Range:</span> <span className="font-semibold">${metrics.minIncome.toLocaleString()} - ${metrics.maxIncome.toLocaleString()}</span></p>
-            </div>
-          </Card>
-
-          <Card className="p-6 shadow-card border-border animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <h3 className="text-lg font-semibold mb-4 text-primary">Spending Score Statistics</h3>
-            <div className="space-y-2 text-sm">
-              <p><span className="text-muted-foreground">Average:</span> <span className="font-semibold">{metrics.avgSpendingScore.toFixed(1)}</span></p>
-              <p><span className="text-muted-foreground">Range:</span> <span className="font-semibold">{metrics.minSpendingScore} - {metrics.maxSpendingScore}</span></p>
-            </div>
-          </Card>
-        </div>
-
-        {/* Distribution Charts */}
-        <div className="grid md:grid-cols-3 gap-6 mb-6">
           <Card className="p-6 shadow-card border-border">
-            <h2 className="text-xl font-semibold mb-4">Age Distribution</h2>
+            <h2 className="text-2xl font-semibold mb-4">Cluster Distribution</h2>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={ageGroups}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="range" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
                 <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-
-          <Card className="p-6 shadow-card border-border">
-            <h2 className="text-xl font-semibold mb-4">Income Distribution</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={incomeGroups}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="range" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-
-          <Card className="p-6 shadow-card border-border">
-            <h2 className="text-xl font-semibold mb-4">Spending Score Distribution</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={scoreGroups}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="range" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
-              </BarChart>
+                <Legend />
+              </PieChart>
             </ResponsiveContainer>
           </Card>
         </div>
 
-        {/* Sortable Data Table */}
+        {/* Sortable Data Table with Clusters */}
         <Card className="p-6 shadow-card border-border">
           <h2 className="text-2xl font-semibold mb-4">Customer Details</h2>
           <div className="overflow-x-auto">
@@ -258,6 +274,8 @@ const Result = () => {
                       <ArrowUpDown className="w-4 h-4" />
                     </button>
                   </th>
+                  <th className="text-left p-3 font-medium">Cluster</th>
+                  <th className="text-left p-3 font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -267,6 +285,21 @@ const Result = () => {
                     <td className="p-3">{customer.age}</td>
                     <td className="p-3">${customer.income.toLocaleString()}</td>
                     <td className="p-3">{customer.spendingScore}</td>
+                    <td className="p-3">
+                      <span className={getClusterBadge(customer.cluster)}>
+                        {customer.cluster}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDelete(customer.id)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

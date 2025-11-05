@@ -7,8 +7,8 @@ export const Navigation = () => {
   
   const links = [
     { to: "/", label: "Home" },
-    { to: "/upload", label: "Upload" },
-    { to: "/result", label: "Results" },
+    { to: "/add-customer", label: "Add Customer" },
+    { to: "/result", label: "View Clusters" },
     { to: "/about", label: "About" },
   ];
 
