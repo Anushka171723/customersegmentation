@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, ZAxis } from "recharts";
 import { calculateMetrics, Customer, CustomerMetrics, ClusterType } from "@/utils/clustering";
 import { ArrowLeft, Download, ArrowUpDown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -142,6 +142,65 @@ const Result = () => {
     { name: "Low Value", value: clusterCounts["Low Value"], color: "#ef4444" },
   ];
 
+  // Prepare scatter chart data
+  const scatterData = customers.map(c => ({
+    income: c.income,
+    spendingScore: c.spendingScore,
+    age: c.age,
+    name: c.name,
+    cluster: c.cluster,
+  }));
+
+  const getClusterInsights = () => {
+    const highValueCustomers = customers.filter(c => c.cluster === "High Value");
+    const mediumValueCustomers = customers.filter(c => c.cluster === "Medium Value");
+    const lowValueCustomers = customers.filter(c => c.cluster === "Low Value");
+
+    const avgAge = (customers: Customer[]) => 
+      customers.length > 0 ? (customers.reduce((sum, c) => sum + c.age, 0) / customers.length).toFixed(1) : "0";
+    
+    const avgIncome = (customers: Customer[]) => 
+      customers.length > 0 ? (customers.reduce((sum, c) => sum + c.income, 0) / customers.length).toFixed(0) : "0";
+    
+    const avgSpending = (customers: Customer[]) => 
+      customers.length > 0 ? (customers.reduce((sum, c) => sum + c.spendingScore, 0) / customers.length).toFixed(1) : "0";
+
+    return [
+      {
+        cluster: "High Value",
+        count: highValueCustomers.length,
+        avgAge: avgAge(highValueCustomers),
+        avgIncome: avgIncome(highValueCustomers),
+        avgSpending: avgSpending(highValueCustomers),
+        description: "Premium customers with high income and spending patterns. They are the most valuable segment.",
+        color: "text-green-600 dark:text-green-400",
+        bgColor: "bg-green-100 dark:bg-green-900/30",
+      },
+      {
+        cluster: "Medium Value",
+        count: mediumValueCustomers.length,
+        avgAge: avgAge(mediumValueCustomers),
+        avgIncome: avgIncome(mediumValueCustomers),
+        avgSpending: avgSpending(mediumValueCustomers),
+        description: "Moderate customers with balanced income and spending. Potential for growth.",
+        color: "text-orange-600 dark:text-orange-400",
+        bgColor: "bg-orange-100 dark:bg-orange-900/30",
+      },
+      {
+        cluster: "Low Value",
+        count: lowValueCustomers.length,
+        avgAge: avgAge(lowValueCustomers),
+        avgIncome: avgIncome(lowValueCustomers),
+        avgSpending: avgSpending(lowValueCustomers),
+        description: "Budget-conscious customers with lower spending capacity. Requires targeted engagement.",
+        color: "text-red-600 dark:text-red-400",
+        bgColor: "bg-red-100 dark:bg-red-900/30",
+      },
+    ];
+  };
+
+  const insights = getClusterInsights();
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Navigation />
@@ -230,6 +289,107 @@ const Result = () => {
             </ResponsiveContainer>
           </Card>
         </div>
+
+        {/* Scatter Chart */}
+        <Card className="p-6 shadow-card border-border mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Customer Segmentation Scatter Plot</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Visual representation of customers based on Income and Spending Score
+          </p>
+          <ResponsiveContainer width="100%" height={400}>
+            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                type="number" 
+                dataKey="income" 
+                name="Income" 
+                label={{ value: 'Annual Income ($)', position: 'insideBottom', offset: -10 }}
+                tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+              />
+              <YAxis 
+                type="number" 
+                dataKey="spendingScore" 
+                name="Spending Score" 
+                label={{ value: 'Spending Score', angle: -90, position: 'insideLeft' }}
+              />
+              <ZAxis range={[100, 100]} />
+              <Tooltip 
+                cursor={{ strokeDasharray: '3 3' }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-card border border-border p-3 rounded-lg shadow-lg">
+                        <p className="font-semibold">{data.name}</p>
+                        <p className="text-sm">Age: {data.age}</p>
+                        <p className="text-sm">Income: ${data.income.toLocaleString()}</p>
+                        <p className="text-sm">Spending: {data.spendingScore}</p>
+                        <p className={`text-sm font-semibold ${getClusterColor(data.cluster)}`}>
+                          {data.cluster}
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Legend />
+              <Scatter 
+                name="High Value" 
+                data={scatterData.filter(d => d.cluster === "High Value")} 
+                fill="#22c55e" 
+              />
+              <Scatter 
+                name="Medium Value" 
+                data={scatterData.filter(d => d.cluster === "Medium Value")} 
+                fill="#f97316" 
+              />
+              <Scatter 
+                name="Low Value" 
+                data={scatterData.filter(d => d.cluster === "Low Value")} 
+                fill="#ef4444" 
+              />
+            </ScatterChart>
+          </ResponsiveContainer>
+        </Card>
+
+        {/* Insights Section */}
+        <Card className="p-6 shadow-card border-border mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Cluster Insights</h2>
+          <p className="text-muted-foreground mb-6">
+            Understanding what each customer segment represents
+          </p>
+          <div className="space-y-4">
+            {insights.map((insight) => (
+              <div 
+                key={insight.cluster}
+                className={`p-4 rounded-lg border-l-4 ${insight.bgColor}`}
+                style={{ borderLeftColor: insight.cluster === "High Value" ? "#22c55e" : insight.cluster === "Medium Value" ? "#f97316" : "#ef4444" }}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className={`text-lg font-semibold ${insight.color}`}>
+                    {insight.cluster} ({insight.count} customers)
+                  </h3>
+                </div>
+                <p className="text-sm text-foreground/80 mb-3">{insight.description}</p>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Avg Age:</span>
+                    <p className="font-semibold">{insight.avgAge} years</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Avg Income:</span>
+                    <p className="font-semibold">${parseFloat(insight.avgIncome).toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Avg Spending:</span>
+                    <p className="font-semibold">{insight.avgSpending}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
 
         {/* Sortable Data Table with Clusters */}
         <Card className="p-6 shadow-card border-border">

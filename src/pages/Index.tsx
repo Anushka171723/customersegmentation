@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { BarChart3, UserPlus, Target, Users } from "lucide-react";
+import { BarChart3, UserPlus, Target, Users, Upload } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 
 const Index = () => {
@@ -23,16 +23,16 @@ const Index = () => {
             based on their income and spending behavior for targeted marketing strategies.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link to="/add-customer">
+            <Link to="/upload">
               <Button size="lg" className="shadow-glow text-lg px-8 py-6">
-                Add Customer
-                <UserPlus className="ml-2 w-5 h-5" />
+                Get Started - Upload Data
+                <Upload className="ml-2 w-5 h-5" />
               </Button>
             </Link>
-            <Link to="/result">
+            <Link to="/add-customer">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                View Clusters
-                <BarChart3 className="ml-2 w-5 h-5" />
+                Add Manually
+                <UserPlus className="ml-2 w-5 h-5" />
               </Button>
             </Link>
           </div>
@@ -42,9 +42,9 @@ const Index = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {[
             {
-              icon: UserPlus,
-              title: "Easy Customer Input",
-              description: "Add customer data through a simple form or upload CSV files with bulk data",
+              icon: Upload,
+              title: "CSV Upload & Manual Entry",
+              description: "Upload CSV files for bulk data import or add customers manually through forms",
             },
             {
               icon: Target,
@@ -53,8 +53,8 @@ const Index = () => {
             },
             {
               icon: Users,
-              title: "Visual Insights",
-              description: "Color-coded tables, pie charts, and summary statistics for each cluster",
+              title: "Visual Insights & Charts",
+              description: "Scatter plots, pie charts, cluster insights, and detailed customer analytics",
             },
           ].map((feature, index) => (
             <Card
@@ -76,9 +76,9 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-6 text-center">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: "1", title: "Add Customers", desc: "Enter customer details one by one or upload CSV data" },
-              { step: "2", title: "Auto-Cluster", desc: "System assigns customers to High, Medium, or Low Value clusters" },
-              { step: "3", title: "Visualize Results", desc: "View color-coded tables, charts, and cluster summaries" },
+              { step: "1", title: "Upload Data", desc: "Upload CSV file or add customer details manually" },
+              { step: "2", title: "Auto-Cluster", desc: "System assigns customers to High, Medium, or Low Value segments" },
+              { step: "3", title: "Analyze Results", desc: "View scatter plots, insights, distribution charts, and detailed tables" },
             ].map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-12 h-12 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xl flex items-center justify-center mx-auto mb-4 shadow-glow">
