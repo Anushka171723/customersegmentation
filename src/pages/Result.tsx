@@ -202,98 +202,136 @@ const Result = () => {
   const insights = getClusterInsights();
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-subtle bg-gradient-mesh">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-12">
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
-              Customer Clusters
-            </h1>
-            <p className="text-muted-foreground">
-              Insights from {metrics.totalCustomers} customer records
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={() => navigate("/add-customer")} variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Add Customer
-            </Button>
-            <Button onClick={downloadResults} variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </Button>
-            <Button onClick={handleResetData} variant="destructive">
-              <Trash2 className="w-4 h-4 mr-2" />
-              Reset Data
-            </Button>
+      <main className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
+        {/* Header with improved spacing and visual hierarchy */}
+        <div className="mb-8 md:mb-10">
+          <div className="flex items-start justify-between flex-wrap gap-6 mb-4">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <span className="text-xs font-medium text-primary">Analysis Complete</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent tracking-tight">
+                Customer Clusters
+              </h1>
+              <p className="text-base text-muted-foreground flex items-center gap-2">
+                <span className="font-semibold text-foreground">{metrics.totalCustomers}</span> customers analyzed and segmented
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={() => navigate("/add-customer")} variant="outline" className="shadow-sm hover:shadow-md transition-all">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Add Customer
+              </Button>
+              <Button onClick={downloadResults} variant="outline" className="shadow-sm hover:shadow-md transition-all">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+              <Button onClick={handleResetData} variant="destructive" className="shadow-sm hover:shadow-md transition-all">
+                <Trash2 className="w-4 h-4 mr-2" />
+                Reset Data
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Summary Section */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <Card className="p-6 shadow-card border-border animate-fade-in">
-            <h2 className="text-2xl font-semibold mb-4">Summary</h2>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Total Customers:</span>
-                <span className="font-bold text-2xl">{metrics.totalCustomers}</span>
+        {/* Summary Section - Enhanced Design */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <Card className="p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-border/50 bg-card/80 backdrop-blur-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
+                <span className="text-lg font-bold text-primary-foreground">Σ</span>
               </div>
-              <div className="h-px bg-border"></div>
-              <div className="flex justify-between items-center">
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-green-500"></span>
-                  High Value:
-                </span>
-                <span className="font-bold text-xl text-green-600 dark:text-green-400">{clusterCounts["High Value"]}</span>
+              <h2 className="text-2xl font-bold">Summary</h2>
+            </div>
+            <div className="space-y-5">
+              <div className="flex justify-between items-center p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors">
+                <span className="text-sm font-medium text-muted-foreground">Total Customers</span>
+                <span className="font-bold text-3xl bg-gradient-primary bg-clip-text text-transparent">{metrics.totalCustomers}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-orange-500"></span>
-                  Medium Value:
-                </span>
-                <span className="font-bold text-xl text-orange-600 dark:text-orange-400">{clusterCounts["Medium Value"]}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                  Low Value:
-                </span>
-                <span className="font-bold text-xl text-red-600 dark:text-red-400">{clusterCounts["Low Value"]}</span>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 rounded-lg hover:bg-green-50 dark:hover:bg-green-950/20 transition-colors group">
+                  <span className="flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] group-hover:shadow-[0_0_12px_rgba(34,197,94,0.7)] transition-shadow"></span>
+                    <span className="text-sm font-medium">High Value</span>
+                  </span>
+                  <span className="font-bold text-xl text-green-600 dark:text-green-400">{clusterCounts["High Value"]}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors group">
+                  <span className="flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)] group-hover:shadow-[0_0_12px_rgba(249,115,22,0.7)] transition-shadow"></span>
+                    <span className="text-sm font-medium">Medium Value</span>
+                  </span>
+                  <span className="font-bold text-xl text-orange-600 dark:text-orange-400">{clusterCounts["Medium Value"]}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors group">
+                  <span className="flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)] group-hover:shadow-[0_0_12px_rgba(239,68,68,0.7)] transition-shadow"></span>
+                    <span className="text-sm font-medium">Low Value</span>
+                  </span>
+                  <span className="font-bold text-xl text-red-600 dark:text-red-400">{clusterCounts["Low Value"]}</span>
+                </div>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 shadow-card border-border">
-            <h2 className="text-2xl font-semibold mb-4">Cluster Distribution</h2>
-            <ResponsiveContainer width="100%" height={250}>
+          <Card className="p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-border/50 bg-card/80 backdrop-blur-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow">
+                <span className="text-lg font-bold text-accent-foreground">π</span>
+              </div>
+              <h2 className="text-2xl font-bold">Distribution</h2>
+            </div>
+            <ResponsiveContainer width="100%" height={260}>
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={80}
+                  outerRadius={90}
                   fill="#8884d8"
                   dataKey="value"
+                  strokeWidth={2}
+                  className="drop-shadow-lg"
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.color} className="hover:opacity-80 transition-opacity" />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value, name) => [`${value} customers`, name]} />
-                <Legend />
+                <Tooltip 
+                  formatter={(value, name) => [`${value} customers`, name]}
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '0.5rem',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                />
+                <Legend 
+                  wrapperStyle={{ paddingTop: '1rem' }}
+                  iconType="circle"
+                />
               </PieChart>
             </ResponsiveContainer>
           </Card>
         </div>
 
-        {/* Scatter Chart */}
-        <Card className="p-6 shadow-card border-border mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Customer Segmentation Scatter Plot</h2>
-          <p className="text-sm text-muted-foreground mb-4">
-            Visual representation of customers based on Income and Spending Score
-          </p>
+        {/* Scatter Chart - Enhanced */}
+        <Card className="p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-border/50 bg-card/80 backdrop-blur-sm mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow">
+              <span className="text-lg font-bold text-accent-foreground">⊕</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Segmentation Analysis</h2>
+              <p className="text-sm text-muted-foreground">
+                Income vs Spending Score distribution across customer segments
+              </p>
+            </div>
+          </div>
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -351,37 +389,59 @@ const Result = () => {
           </ResponsiveContainer>
         </Card>
 
-        {/* Insights Section */}
-        <Card className="p-6 shadow-card border-border mb-6">
-          <h2 className="text-2xl font-semibold mb-4">Cluster Insights</h2>
-          <p className="text-muted-foreground mb-6">
-            Understanding what each customer segment represents
-          </p>
-          <div className="space-y-4">
-            {insights.filter(insight => insight.count > 0).map((insight) => (
+        {/* Insights Section - Enhanced */}
+        <Card className="p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-border/50 bg-card/80 backdrop-blur-sm mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
+              <span className="text-lg font-bold text-primary-foreground">✦</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Customer Insights</h2>
+              <p className="text-muted-foreground">
+                Deep dive into each segment's characteristics
+              </p>
+            </div>
+          </div>
+          <div className="space-y-5 mt-6">
+            {insights.filter(insight => insight.count > 0).map((insight, index) => (
               <div 
                 key={insight.cluster}
-                className={`p-4 rounded-lg border-l-4 ${insight.bgColor}`}
-                style={{ borderLeftColor: insight.cluster === "High Value" ? "#22c55e" : insight.cluster === "Medium Value" ? "#f97316" : "#ef4444" }}
+                className={`p-6 rounded-xl border-l-4 ${insight.bgColor} hover:shadow-md transition-all duration-300 group`}
+                style={{ 
+                  borderLeftColor: insight.cluster === "High Value" ? "#22c55e" : insight.cluster === "Medium Value" ? "#f97316" : "#ef4444",
+                  animationDelay: `${index * 100}ms`
+                }}
               >
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className={`text-lg font-semibold ${insight.color}`}>
-                    {insight.cluster} ({insight.count} customers)
-                  </h3>
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-lg ${insight.bgColor} flex items-center justify-center border-2`}
+                      style={{ borderColor: insight.cluster === "High Value" ? "#22c55e" : insight.cluster === "Medium Value" ? "#f97316" : "#ef4444" }}
+                    >
+                      <span className={`text-2xl font-bold ${insight.color}`}>
+                        {insight.cluster === "High Value" ? "↑" : insight.cluster === "Medium Value" ? "~" : "↓"}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className={`text-xl font-bold ${insight.color}`}>
+                        {insight.cluster}
+                      </h3>
+                      <span className="text-sm text-muted-foreground font-medium">{insight.count} customers</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-foreground/80 mb-3">{insight.description}</p>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Avg Age:</span>
-                    <p className="font-semibold">{insight.avgAge} years</p>
+                <p className="text-sm text-foreground/90 mb-4 leading-relaxed">{insight.description}</p>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="p-3 rounded-lg bg-background/50">
+                    <span className="text-xs text-muted-foreground font-medium block mb-1">Average Age</span>
+                    <p className="font-bold text-lg">{insight.avgAge} <span className="text-xs font-normal text-muted-foreground">years</span></p>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Avg Income:</span>
-                    <p className="font-semibold">${parseFloat(insight.avgIncome).toLocaleString()}</p>
+                  <div className="p-3 rounded-lg bg-background/50">
+                    <span className="text-xs text-muted-foreground font-medium block mb-1">Average Income</span>
+                    <p className="font-bold text-lg">${parseFloat(insight.avgIncome).toLocaleString()}</p>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">Avg Spending:</span>
-                    <p className="font-semibold">{insight.avgSpending}</p>
+                  <div className="p-3 rounded-lg bg-background/50">
+                    <span className="text-xs text-muted-foreground font-medium block mb-1">Avg Spending</span>
+                    <p className="font-bold text-lg">{insight.avgSpending}</p>
                   </div>
                 </div>
               </div>
@@ -389,71 +449,87 @@ const Result = () => {
           </div>
         </Card>
 
-        {/* Sortable Data Table with Clusters */}
-        <Card className="p-6 shadow-card border-border">
-          <h2 className="text-2xl font-semibold mb-4">Customer Details</h2>
-          <div className="overflow-x-auto">
+        {/* Sortable Data Table with Clusters - Enhanced */}
+        <Card className="p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-border/50 bg-card/80 backdrop-blur-sm">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center shadow-glow">
+              <span className="text-lg font-bold text-accent-foreground">⊞</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Customer Directory</h2>
+              <p className="text-sm text-muted-foreground">Complete list with sorting capabilities</p>
+            </div>
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-border/50">
             <table className="w-full text-sm">
-              <thead className="border-b border-border">
+              <thead className="bg-secondary/30 backdrop-blur-sm">
                 <tr>
-                  <th className="text-left p-3 font-medium">
+                  <th className="text-left p-4 font-semibold">
                     <button 
                       onClick={() => handleSort("name")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 hover:text-primary transition-colors group"
                     >
                       Name
-                      <ArrowUpDown className="w-4 h-4" />
+                      <ArrowUpDown className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </th>
-                  <th className="text-left p-3 font-medium">
+                  <th className="text-left p-4 font-semibold">
                     <button 
                       onClick={() => handleSort("age")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 hover:text-primary transition-colors group"
                     >
                       Age
-                      <ArrowUpDown className="w-4 h-4" />
+                      <ArrowUpDown className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </th>
-                  <th className="text-left p-3 font-medium">
+                  <th className="text-left p-4 font-semibold">
                     <button 
                       onClick={() => handleSort("income")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 hover:text-primary transition-colors group"
                     >
                       Income
-                      <ArrowUpDown className="w-4 h-4" />
+                      <ArrowUpDown className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </th>
-                  <th className="text-left p-3 font-medium">
+                  <th className="text-left p-4 font-semibold">
                     <button 
                       onClick={() => handleSort("spendingScore")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 hover:text-primary transition-colors group"
                     >
-                      Spending Score
-                      <ArrowUpDown className="w-4 h-4" />
+                      Spending
+                      <ArrowUpDown className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </button>
                   </th>
-                  <th className="text-left p-3 font-medium">Cluster</th>
-                  <th className="text-left p-3 font-medium">Actions</th>
+                  <th className="text-left p-4 font-semibold">Segment</th>
+                  <th className="text-left p-4 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {sortedCustomers.map((customer) => (
-                  <tr key={customer.id} className="border-b border-border/50 hover:bg-secondary/50 transition-colors">
-                    <td className="p-3">{customer.name}</td>
-                    <td className="p-3">{customer.age}</td>
-                    <td className="p-3">${customer.income.toLocaleString()}</td>
-                    <td className="p-3">{customer.spendingScore}</td>
-                    <td className="p-3">
+                {sortedCustomers.map((customer, index) => (
+                  <tr 
+                    key={customer.id} 
+                    className="border-b border-border/30 hover:bg-secondary/40 transition-all duration-200 group"
+                    style={{ animationDelay: `${index * 20}ms` }}
+                  >
+                    <td className="p-4 font-medium">{customer.name}</td>
+                    <td className="p-4 text-muted-foreground">{customer.age}</td>
+                    <td className="p-4 font-mono text-muted-foreground">${customer.income.toLocaleString()}</td>
+                    <td className="p-4">
+                      <span className="inline-flex items-center justify-center w-12 h-8 rounded-md bg-secondary/50 font-semibold">
+                        {customer.spendingScore}
+                      </span>
+                    </td>
+                    <td className="p-4">
                       <span className={getClusterBadge(customer.cluster)}>
                         {customer.cluster}
                       </span>
                     </td>
-                    <td className="p-3">
+                    <td className="p-4">
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => handleDelete(customer.id)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
