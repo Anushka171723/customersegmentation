@@ -36,8 +36,8 @@ const AddCustomer = () => {
       return;
     }
 
-    if (income < 0) {
-      toast.error("Please enter a valid income");
+    if (income < 0 || income > 500000) {
+      toast.error("Please enter a valid income (0-500,000)");
       return;
     }
 
@@ -137,6 +137,7 @@ const AddCustomer = () => {
                   value={formData.income}
                   onChange={(e) => setFormData({ ...formData, income: e.target.value })}
                   min="0"
+                  max="500000"
                   className="border-input"
                 />
               </div>

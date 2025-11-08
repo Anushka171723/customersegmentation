@@ -218,7 +218,7 @@ const Result = () => {
           <div className="flex gap-2">
             <Button onClick={() => navigate("/add-customer")} variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Add More
+              Add Customer
             </Button>
             <Button onClick={downloadResults} variant="outline">
               <Download className="w-4 h-4 mr-2" />
@@ -360,7 +360,7 @@ const Result = () => {
             Understanding what each customer segment represents
           </p>
           <div className="space-y-4">
-            {insights.map((insight) => (
+            {insights.filter(insight => insight.count > 0).map((insight) => (
               <div 
                 key={insight.cluster}
                 className={`p-4 rounded-lg border-l-4 ${insight.bgColor}`}
